@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wydatki</title>
+</head>
+<body>
+{% if message %}
+<div class="message">
+    {{ message }}
+</div>
+{% endif %}
+<form method="POST" action="/">
+    {{ form.csrf_token }}
+    <table>
+        <tr><td>{{ form.name.label }} {{ form.name(size=20) }} {% for error in form.name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </td></tr>
+        <tr><td>{{ form.category.label }} {{ form.category }}
+            {% for error in form.category.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </td></tr>
+        <tr><td>{{ form.date.label }} {{ form.date }}{% for error in form.date.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </td></tr>
+        <tr><td>{{ form.value.label }} {{ form.value }}{% for error in form.value.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </td></tr>
+    </table>
+    <input type="submit" value="Send">
+</form>
+</body>
+</html>
