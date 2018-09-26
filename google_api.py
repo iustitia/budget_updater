@@ -116,8 +116,7 @@ class Api:
         if date is None:
             date = 'today'
         sheet_name, day = self.get_sheet_and_column_for_date(date)
-        # print(sheet_name, day)
-        # print({'day': day, 'category': category})
+
         cell_range = '{0}{1}:{0}{1}'.format(day, category)
         self.update_cell(cell_range, value, sheet_name)
 
@@ -125,8 +124,7 @@ class Api:
         if date is None:
             date = 'today'
         sheet_name, day = self.get_sheet_and_column_for_date(date)
-        # print(sheet_name, day)
-        # print({'day': day, 'category': category_id})
+
         if type(value) != str:
             value = str(value)
         value = value.replace('.', ',')

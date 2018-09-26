@@ -32,7 +32,6 @@ def main():
         category = form.category.data
         date = form.date.data
         value = form.value.data
-        print((category, date, value))
         api.update_expense_by_cat_id(category, value, date)
         return redirect(url_for('.main', message='Data updated!'))
     else:
@@ -48,7 +47,6 @@ def update():
 class MyForm(FlaskForm):
     categories = api.get_categories()
     category_choices = [(value, label) for (label, value) in categories.items()]
-    # print(category_choices)
 
     category = SelectField('category', choices=category_choices, validators=[DataRequired()], coerce=int)
     name = StringField('name', validators=[DataRequired()], default='your name')
