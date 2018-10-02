@@ -61,7 +61,6 @@ class Api:
                     'Accept': 'application/json'}
 
         response = post(url, data=data, headers=headers)
-        return response['access_token']
 
     def _get_service(self):
         http = self.credentials.authorize(httplib2.Http())
