@@ -1,11 +1,11 @@
-import datetime
 import os
 from collections import OrderedDict
-from pprint import pprint
 
+import json
 import httplib2
 import oauth2client
 import yaml
+from requests import post
 
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
@@ -27,12 +27,15 @@ class Api:
     categories = None
 
     def __init__(self, spreadsheet_id=None):
+        with open(self.CLIENT_SECRET) as f:
+            self.client_secret_json = json.load(f)
         self.authorize_credentials()
         if spreadsheet_id is None:
             self.spreadsheet_id = self.id_my_budget
         else:
             self.spreadsheet_id = spreadsheet_id
         self._get_service()
+
 
     def authorize_credentials(self):
         # Fetch credentials from storage
@@ -42,6 +45,23 @@ class Api:
             flow = flow_from_clientsecrets(self.CLIENT_SECRET, scope=self.SCOPE)
             http = httplib2.Http()
             self.credentials = run_flow(flow, self.STORAGE, http=http)
+        self.refresh_access_token()
+
+    def refresh_access_token(self):
+        refresh_token = self.credentials.refresh_token
+        url = 'https://accounts.google.com/o/oauth2/token'
+        from urllib.parse import urlencode
+        data=urlencode({
+                              'grant_type': 'refresh_token',
+                              'client_id': self.client_secret_json['web']['client_id'],
+                              'client_secret': self.client_secret_json['web']['client_secret'],
+                              'refresh_token': refresh_token
+                          })
+        headers = {'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json'}
+
+        response = post(url, data=data, headers=headers)
+        return response['access_token']
 
     def _get_service(self):
         http = self.credentials.authorize(httplib2.Http())
@@ -51,10 +71,8 @@ class Api:
     def get_google_sheet(self, cell_range, sheet_name=None, format_option='FORMATTED_VALUE'):
         if sheet_name:
             cell_range = '%s!%s' % (sheet_name, cell_range)
-        # print(cell_range)
         result = self.service.spreadsheets().values().get(
             spreadsheetId=self.spreadsheet_id, range=cell_range, valueRenderOption=format_option).execute()
-        # print(result)
         values = result.get('values', [])
 
         return values
