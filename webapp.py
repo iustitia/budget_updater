@@ -8,7 +8,7 @@ from werkzeug.utils import redirect
 from wtforms import StringField, SelectField, DateField, DecimalField
 from wtforms.validators import DataRequired, NumberRange
 
-from google_api import Api
+from .google_api import Api
 
 app = Flask(__name__)
 
