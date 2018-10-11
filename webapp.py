@@ -21,13 +21,15 @@ app.config.update(dict(
     WTF_CSRF_SECRET_KEY=config['WTF_CSRF_SECRET_KEY']
 ))
 
-api = Api()
-
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
+    api = Api()
 
     form = MyForm()
+    categories = api.get_categories()
+    category_choices = [(value, label) for (label, value) in categories.items()]
+    form.category.choices = category_choices
     if form.validate_on_submit():
         category = form.category.data
         date = form.date.data
@@ -45,10 +47,7 @@ def update():
 
 
 class MyForm(FlaskForm):
-    categories = api.get_categories()
-    category_choices = [(value, label) for (label, value) in categories.items()]
-
-    category = SelectField('category', choices=category_choices, validators=[DataRequired()], coerce=int)
+    category = SelectField('category', validators=[DataRequired()], coerce=int)
     name = StringField('name', validators=[DataRequired()], default='your name')
     date = DateField('date', format='%d.%m.%Y', validators=[DataRequired()], default=datetime.datetime.today())
     value = DecimalField('money', validators=[DataRequired(), NumberRange(min=0, max=10000)])
