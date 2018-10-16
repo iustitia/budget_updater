@@ -3,6 +3,7 @@ import os
 
 import yaml
 from flask import Flask, render_template, url_for
+from flask_login import login_required, LoginManager, login_user
 from flask_wtf import FlaskForm
 from werkzeug.utils import redirect
 from wtforms import StringField, SelectField, DateField, DecimalField
@@ -21,8 +22,12 @@ app.config.update(dict(
     WTF_CSRF_SECRET_KEY=config['WTF_CSRF_SECRET_KEY']
 ))
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+
 
 @app.route('/', methods=['GET', 'POST'])
+@login_required
 def main():
     api = Api()
 
@@ -44,6 +49,23 @@ def main():
 @app.route('/update')
 def update():
     return 'Hello, updated World!'
+
+
+class LoginForm(FlaskForm):
+    login = StringField('login', validators=[DataRequired()])
+    password = StringField('password', validators=[DataRequired()])
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+
+        login_user(None)
+        # logic for loggging to do
+
+        return redirect(url_for('.main'))
+    return render_template('login.html', form=form)
 
 
 class MyForm(FlaskForm):
