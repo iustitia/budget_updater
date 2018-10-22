@@ -4,6 +4,8 @@ import os
 import yaml
 from flask import Flask, render_template, url_for
 from flask_login import login_required, LoginManager, login_user
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from werkzeug.utils import redirect
 from wtforms import StringField, SelectField, DateField, DecimalField
@@ -19,8 +21,13 @@ with open(os.path.join(BASE_DIR, 'google_api', 'key.yaml'), 'r') as y:
 
 app.config.update(dict(
     SECRET_KEY=config['SECRET_KEY'],
-    WTF_CSRF_SECRET_KEY=config['WTF_CSRF_SECRET_KEY']
+    WTF_CSRF_SECRET_KEY=config['WTF_CSRF_SECRET_KEY'],
+    SQLALCHEMY_DATABASE_URI = config['DATABASE_URL'],
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 ))
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
