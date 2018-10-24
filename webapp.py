@@ -2,8 +2,8 @@ import datetime
 import os
 
 import yaml
-from flask import Flask, render_template, url_for
-from flask_login import login_required, LoginManager, login_user
+from flask import Flask, render_template, url_for, flash
+from flask_login import login_required, LoginManager, login_user, current_user
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
@@ -61,18 +61,6 @@ def update():
 class LoginForm(FlaskForm):
     login = StringField('login', validators=[DataRequired()])
     password = StringField('password', validators=[DataRequired()])
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-
-        login_user(None)
-        # logic for loggging to do
-
-        return redirect(url_for('.main'))
-    return render_template('login.html', form=form)
 
 
 class MyForm(FlaskForm):
