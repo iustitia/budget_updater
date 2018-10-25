@@ -13,7 +13,9 @@ from wtforms.validators import DataRequired, NumberRange
 
 from .google_api import Api
 
+
 app = Flask(__name__)
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 with open(os.path.join(BASE_DIR, 'google_api', 'key.yaml'), 'r') as y:
@@ -61,6 +63,26 @@ def update():
 class LoginForm(FlaskForm):
     login = StringField('login', validators=[DataRequired()])
     password = StringField('password', validators=[DataRequired()])
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    from .models import User
+    if current_user.is_authenticated:
+        return redirect(url_for('.main'))
+
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+
+        login_user(user, remember=form.remember_me.data)
+
+        return redirect(url_for('.main'))
+    return render_template('login.html', form=form)
 
 
 class MyForm(FlaskForm):
