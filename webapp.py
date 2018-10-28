@@ -3,7 +3,7 @@ import os
 
 import yaml
 from flask import Flask, render_template, url_for, flash
-from flask_login import login_required, LoginManager, login_user, current_user
+from flask_login import login_required, LoginManager, login_user, current_user, logout_user
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
@@ -83,6 +83,12 @@ def login():
 
         return redirect(url_for('.main'))
     return render_template('login.html', form=form)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 
 class MyForm(FlaskForm):
