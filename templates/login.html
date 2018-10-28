@@ -10,10 +10,10 @@
     {{ message }}
 </div>
 {% endif %}
-<form method="POST" action="/">
+<form method="POST" action="/login">
     {{ form.csrf_token }}
     <table>
-        <tr><td>{{ form.login.label }} {{ form.login(size=20) }} {% for error in form.login.errors %}
+        <tr><td>{{ form.username.label }} {{ form.username(size=20) }} {% for error in form.username.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </td></tr>
