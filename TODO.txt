@@ -1,0 +1,7 @@
+"""
+TODO:
+- validate test name - i.e. name + day
+- categories grouped by main cat - maybe 'K:' is enough
+- when do we ask for permission - shouldn't it be when app is up already so the user can be redirect?
+
+"""

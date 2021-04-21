@@ -1,0 +1,7 @@
+SECRET_KEY: 'secret'
+WTF_CSRF_SECRET_KEY: 'secret'
+spreadsheet_id_test: 'secret'
+spreadsheet_id_my_budget: 'secret-secret'
+spreadsheet_id_my_budget_2019: 'secret-secret-secret'
+DATABASE_URL: 'sqlite:////path/to/db/budget.db'
+

@@ -36,9 +36,8 @@ login_manager.init_app(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
-@login_required
 def main():
-    api = Api()
+    api = Api(spreadsheet_id=config['spreadsheet_id_my_budget_2019'])
 
     form = MyForm()
     categories = api.get_categories()
